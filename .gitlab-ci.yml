@@ -1,0 +1,204 @@
+# mal gucken ob das geht, wenn ich mich versuche gegen den dependency proxy vom URZ chemnitz zu authen 
+# geht nicht, da läuft kein proxy die env ist einfach nur autogeneriert oder im URZ is einfach was komisch.
+# alles was an Fehlerbeschreibungen zu finden ist trifft hier nicht zu. Mein Nutzer ist Owner von allem und
+# auch Member in allen Projekten.
+#image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mcr.microsoft.com/dotnet/sdk:5.0
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+stages:
+  - test_pre
+  - test_ta3
+  - test_ta4
+
+variables:
+  TESTS_BASE_DIR: '/Tests'
+  TESTS_EMPTY_FRAMEWORK: '/Beleg2022_Framework.EmptyFramework.Tests'
+  TESTS_TA31: '/Beleg2022_Framework.TA31KlassenUndKonstruktoren.Tests'
+  TESTS_TA32: '/Beleg2022_Framework.TA33Teil' #'/Beleg2022_Framework.TA32Eingangslager' ... die namen sind beim verschieben durcheinander gekommen, muss man mal fixen ...
+  TESTS_TA33: '/Beleg2022_Framework.TA34Lager' #'/Beleg2022_Framework.TA33Teil'
+  TESTS_TA34: '/Beleg2022_Framework.TA32Eingangslager' #'/Beleg2022_Framework.TA34Lager'
+  TESTS_TA41: '/Beleg2022_Framework.TA41Fertigungsinsel'
+  TESTS_TA42: '/Beleg2022_Framework.TA42Hauptprozess'
+  TESTS_RESULTS_DIR: '/TestResults/'
+
+
+
+test_job_empty_framework:
+  stage: test_pre
+  before_script:
+   - echo | dotnet --version
+   - echo "Installing trx2junit"
+   - dotnet tool update trx2junit --tool-path tools
+   - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+    - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_EMPTY_FRAMEWORK/Beleg2022_Framework.EmptyFramework.Tests.csproj" --logger "trx;LogFileName=TestResults_pre.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_EMPTY_FRAMEWORK$TESTS_RESULTS_DIR/TestResults_pre.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_EMPTY_FRAMEWORK$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 week
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_EMPTY_FRAMEWORK$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_EMPTY_FRAMEWORK$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA31:
+  stage: test_ta3
+  needs: ["test_job_empty_framework"]
+  dependencies:
+    - test_job_empty_framework
+  before_script:
+   - echo | dotnet --version
+   - echo "Installing trx2junit"
+   - dotnet tool update trx2junit --tool-path tools
+   - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+    - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA31/Beleg2022_Framework.TA31KlassenUndKonstruktoren.Tests.csproj" --logger "trx;LogFileName=TestResults_ta31.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA31$TESTS_RESULTS_DIR/TestResults_ta31.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA31$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 week
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA31$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA31$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA32:
+  stage: test_ta3
+  dependencies:
+    - test_job_TA31
+  before_script:
+   - echo | dotnet --version
+   - echo "Installing trx2junit"
+   - dotnet tool update trx2junit --tool-path tools
+   - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+    # - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA32/Beleg2022_Framework.TA32Teil.csproj" --logger "trx;LogFileName=TestResults_ta32.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA32$TESTS_RESULTS_DIR/TestResults_ta32.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA32$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 week
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA32$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA32$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA33:
+  stage: test_ta3
+
+  dependencies:
+    - test_job_TA32
+  before_script:
+  # - dotnet tool update trx2junit --tool-path tools
+   - echo "Setup finished"
+  script:
+  #  - 'echo "dotnet restore"'
+  #  - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA33/Beleg2022_Framework.TA33Lager.csproj" --logger "trx;LogFileName=TestResults_ta33.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA33$TESTS_RESULTS_DIR/TestResults_ta33.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA33$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 week
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA33$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA33$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA34:
+  stage: test_ta3
+  dependencies:
+    - test_job_TA33
+  before_script:
+  # - dotnet tool update trx2junit --tool-path tools
+   - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+  #  - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA34/Beleg2022_Framework.TA34Eingangslager.csproj" --logger "trx;LogFileName=TestResults_ta34.trx"  #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA34$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 week
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA34$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA34$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA41:
+  stage: test_ta4
+  dependencies:
+    - test_job_TA34
+  before_script:
+  # - dotnet tool update trx2junit --tool-path tools
+    - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+ #   - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA41/Beleg2022_Framework.TA41Fertigungsinsel.csproj" --logger "trx;LogFileName=TestResults_ta41.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA41$TESTS_RESULTS_DIR/TestResults_ta41.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA41$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 day
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA41$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA41$TESTS_RESULTS_DIR/TestResults_*.xml
+
+test_job_TA42:
+  stage: test_ta4
+  dependencies:
+    - test_job_TA41
+  before_script:
+  # - dotnet tool update trx2junit --tool-path tools
+    - echo "Setup finished"
+  script:
+    - 'echo "dotnet restore"'
+ #   - 'dotnet restore'
+    - 'echo "dotnet test"'
+    - dotnet test "${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA42/Beleg2022_Framework.TA42Hauptprozess.csproj" --logger "trx;LogFileName=TestResults_ta42.trx" #only works, if testproject includes NunitXml.TestLogger
+  after_script:
+    - ./tools/trx2junit ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA42$TESTS_RESULTS_DIR/TestResults_ta42.trx
+    - ls
+    - ls ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA42$TESTS_RESULTS_DIR
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 1 day
+    paths:
+      - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA42$TESTS_RESULTS_DIR
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}$TESTS_BASE_DIR$TESTS_TA42$TESTS_RESULTS_DIR/TestResults_*.xml

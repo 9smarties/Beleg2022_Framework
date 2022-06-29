@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Beleg2022_Lib_dotnet5</name>
+    </assembly>
+    <members>
+        <member name="T:Beleg2022.Produktionseinrichtung">
+            <summary>
+            abstrakte Klasse der Produktionseinrichtungen. 
+            Diese Klasse definiert Funktionen die von erbenden Klassen ausgepraegt werden muessen.
+            Diese Klasse wird vom Framework vorgegeben.
+            Hier bitte nichts veraendern
+            </summary>
+        </member>
+        <member name="F:Beleg2022.Produktionseinrichtung._Name">
+            <summary>
+            Der Name der Produktionseinrichtung. 
+            Jede Produktionseinrichtung hat genau einen Namen. Keinen Namen gibt es mehrfach. 
+            </summary>
+        </member>
+        <member name="F:Beleg2022.Produktionseinrichtung._AktuellerStatus">
+            <summary>
+            Jede Produktionseinrichtung hat zu jedem Zeitpunkt einen Status, 
+            dieser ist abhaengig davon, ob sich gerade ein Teil in der Einrichtung befindet. 
+            </summary>
+        </member>
+        <member name="F:Beleg2022.Produktionseinrichtung._Position">
+            <summary>
+            Jede Produktionseinrichtung hat eine Position. 
+            </summary>
+        </member>
+        <member name="F:Beleg2022.Produktionseinrichtung._Faehigkeiten">
+            <summary>
+            Jede Produktionseinrichtung hat Verarbeitungsfaehigkeiten. 
+            </summary>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.#ctor(System.String,System.String)">
+            <summary>
+            Konstruktor fuer Produktionseinrichtung
+            </summary>
+            <param name="name">Name der Produktionseinrichtung</param>
+            <param name="position">Position der Produktionseinrichtung</param>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.SetFaehigkeiten(System.Collections.Generic.List{Beleg2022.Verarbeitungsschritt})">
+            <summary>
+            Funktion um die Verarbeitungsfaehigkeiten der Produktionseinrichtung zu setzen.
+            </summary>
+            <param name="value">Die Liste der Faehigkeitan als Verarbeitungsschritte</param>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.HatFaehigkeit(Beleg2022.Verarbeitungsschritt)">
+            <summary>
+            Funktion um eine einzelne Verarbeitungsfaehigkeit abzufragen.
+            </summary>
+            <param name="value">angefragter Verarbeitungsschritt</param>
+            <returns> true, wenn Faehigkeit vorhanden </returns>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.SetStatus(Beleg2022.Status)">
+            <summary>
+            Funktion um den Status der Produktionseinrichtung zu setzen.
+            Jede Produktionseinheit hat zu jedem Zeitpunkt einen Status, 
+            dieser ist abhaengig davon, ob sich gerade ein Teil in der Produktionseinrichtung befindet. 
+            </summary>
+            <param name="value">Der neue Status der Produktionseinrichtung.</param>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.ErmittleStatus">
+            <summary>
+            Funktion die den aktuellen Status der Produktionseinrichtung liefert.
+            Diese müssen Sie implementieren. Sie können sie aber nur nur indirekt 
+            über GetStatus aufrufen
+            </summary>
+            <returns> AktuellerStatus </returns>
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.GetStatus">
+            <summary>
+            Das ist nur eins Namenswrapper für Ermittle Status, Sie können ihn allderdings
+            erst nutzen, nachdem ErmittleStatus implementiert wurde.
+            </summary>  
+        </member>
+        <member name="M:Beleg2022.Produktionseinrichtung.GetName">
+            <summary>
+            Liefert zu einer Produktionseinrichtung den Namen.
+            </summary>
+            <returns>Produktionseinrichtung-Name als String</returns>
+        </member>
+        <member name="T:Beleg2022.Status">
+            <summary>
+            Enumeration fuer die Status, die eine Produktionseinrichtung annehmen kann.
+            Diese Enumeration wird vom Framework vorgegeben.
+            Hier bitte nichts veraendern.
+            </summary>
+        </member>
+        <member name="T:Beleg2022.Transportsystem">
+            <summary>
+            Klasse des abstrakten Transportsystems.
+            Diese Klasse wird vom Framework vorgegeben.
+            Hier bitte nichts veraendern
+            
+            </summary>    
+        </member>
+        <member name="F:Beleg2022.Transportsystem._Position">
+            <summary>
+            Position des Transportsystems
+            </summary>
+        </member>
+        <member name="F:Beleg2022.Transportsystem._Name">
+            <summary>
+            Name des Transportsystems
+            </summary>
+        </member>
+        <member name="M:Beleg2022.Transportsystem.#ctor(System.String,System.String)">
+            <summary>
+            Konstruktor des Transportsystems.
+            </summary>
+            <param name="name">Name des Transportsystems</param>
+            <param name="pos">Position des Transportsystems</param>
+        </member>
+        <member name="M:Beleg2022.Transportsystem.StarteHauptprozess(System.Collections.Generic.List{Beleg2022.Produktionseinrichtung})">
+            <summary>
+            Aufruffunktion fuer die Funktion Hauptprozess der abgeleiteten Klassen.
+            Die Liste der Produktionseinrichtungen muss uebergeben werden, 
+            damit das Transportsystem die Zustaende und Faehigkeiten der 
+            einzelnen Produktionseinrichtungen abfragen kann.
+            </summary>
+            <param name="pe">Liste aller Produktionseinrichtungen der Abteilung</param>
+        </member>
+        <member name="M:Beleg2022.Transportsystem.Hauptprozess(System.Collections.Generic.List{Beleg2022.Produktionseinrichtung})">
+            <summary>
+            Haupt-Sumulationsprozess des Transportsystems.
+            </summary>
+            <param name="pe">Produktionseinrichtungen, mit denen interagiert werden soll</param>
+        </member>
+        <member name="M:Beleg2022.Transportsystem.FahreZu(System.String)">
+            <summary>
+            Funktion zum Bewegen des Transportsystems.
+            </summary>
+            <param name="position">Ziel-Position als String</param>
+        </member>
+        <member name="T:Beleg2022.Verarbeitungsschritt">
+            <summary>
+            Enumeration fuer die Verarbeitungsschritte, die an einem Teil vorgenommen werden
+            sowie die Faehigkeiten, die eine Produktionseinrichtung besitzen kann.
+            Diese Enumeration wird vom Framework vorgegeben.
+            Hier bitte nichts veraendern.
+            </summary>
+        </member>
+        <member name="T:Beleg2022._Internal">
+            <summary>
+            interne Klasse mit statischen Unterstuetzungsfunktionen.
+            Diese Klasse gehoert nicht zum Fachlichen Modell des Diskursbereiches.
+            
+            </summary>
+        </member>
+        <member name="M:Beleg2022._Internal.Anlegen(System.Type,System.String,System.String,System.String)">
+            <summary>
+            Funktion zum Anlegen der einzelnen Objekte der Abteilungssteuerung
+            </summary>
+            <param name="parent">Elternklasse</param>
+            <param name="typ">Klasse des Objektes</param>
+            <param name="name">Name des Objektes</param>
+            <param name="pos">Position des Objektes</param>
+            <returns></returns>
+        </member>
+        <member name="M:Beleg2022._Internal.Ausgabe(System.String)">
+            <summary>
+            Funktion fuer formatierte Konsolen-Ausgaben.
+            Diese Funktion fuegt automatisch Zeitstempel und Absender hinzu.
+            </summary>
+            <param name="text">Inhalt der Konsolenausgabe</param>
+        </member>
+    </members>
+</doc>

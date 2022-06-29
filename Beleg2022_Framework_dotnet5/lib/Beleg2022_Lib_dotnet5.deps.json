@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Beleg2022_Lib_dotnet5/1.0.0": {
+        "runtime": {
+          "Beleg2022_Lib_dotnet5.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Beleg2022_Lib_dotnet5/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
